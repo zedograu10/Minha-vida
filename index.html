@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Minha Sarah ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; background-color: #fff0f5; font-family: 'Montserrat', sans-serif; color: #444; overflow-x: hidden; }
+        
+        #bg-slider {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1.5s ease-in-out;
+            filter: brightness(0.5);
+        }
+
+        .content-overlay {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 5rem; margin: 0; text-shadow: 3px 3px 15px rgba(0,0,0,0.6); }
+        
+        .counter-container { 
+            background: rgba(255, 255, 255, 0.2); 
+            backdrop-filter: blur(10px);
+            padding: 25px; 
+            border-radius: 30px; 
+            margin-top: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        #timer { font-size: 1.5rem; font-weight: 700; margin-top: 10px; color: #fff; }
+
+        .message-section { padding: 80px 25px; text-align: center; max-width: 700px; margin: 0 auto; line-height: 1.8; font-size: 1.3rem; font-style: italic; color: #ad1457; background: white; }
+
+        /* BOTÃO SEM INTERROGAÇÃO */
+        #btnAndante {
+            position: fixed;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff4081, #d81b60);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(216, 27, 96, 0.4);
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        #youtube-player { position: absolute; visibility: hidden; width: 1px; height: 1px; pointer-events: none; }
+
+        footer { text-align: center; padding: 60px; font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #d81b60; background: white; }
+        
+        .heart { position: fixed; top: -10vh; font-size: 1.5rem; animation: fall linear forwards; z-index: 100; pointer-events: none; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body onclick="tocarMusica()">
+
+    <div id="youtube-player"></div>
+
+    <div id="bg-slider"></div>
+
+    <button id="btnAndante" onclick="vitoria()">Vou casar contigo ❤️</button>
+
+    <div class="content-overlay">
+        <h1>Sarah Andreassa</h1>
+        <div class="counter-container">
+            <div>Nosso amor floresce há:</div>
+            <div id="timer">Calculando...</div>
+        </div>
+    </div>
+
+    <section class="message-section">
+        <p>
+            "Desde o dia 4 de dezembro de 2024, minha vida ganhou uma cor nova ao seu lado. 
+            Sarah, você é a minha maior inspiração. Este site é um pequeno gesto para mostrar 
+            que meu amor por você não cabe em palavras."
+        </p>
+    </section>
+
+    <footer>
+        Te amo infinitamente, Victor. ❤️
+    </footer>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+        const videoID = "F1xyabr_8z0"; 
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: videoID,
+                playerVars: { 
+                    'autoplay': 1, 
+                    'loop': 1, 
+                    'playlist': videoID,
+                    'controls': 0,
+                    'showinfo': 0
+                },
+                events: { 'onReady': onPlayerReady }
+            });
+        }
+
+        function onPlayerReady(event) {}
+
+        function tocarMusica() {
+            if (player && player.playVideo) {
+                player.playVideo();
+            }
+        }
+
+        const startDate = new Date(2024, 11, 4, 0, 0, 0);
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+            document.getElementById('timer').innerHTML = days + " dias, " + hours + "h " + mins + "m " + secs + "s";
+        }
+        setInterval(updateTimer, 1000);
+
+        const imagens = ["1.png", "2.png", "3.png"];
+        let imgIndex = 0;
+        const slider = document.getElementById('bg-slider');
+
+        function trocarFundo() {
+            slider.style.backgroundImage = `url('${imagens[imgIndex]}')`;
+            imgIndex = (imgIndex + 1) % imagens.length;
+        }
+        trocarFundo();
+        setInterval(trocarFundo, 5000);
+
+        const btn = document.getElementById('btnAndante');
+        let posX = 100; let posY = 100;
+        let velX = 6; 
+        let velY = 6; 
+
+        function moverBotao() {
+            const larguraTela = window.innerWidth - btn.offsetWidth;
+            const alturaTela = window.innerHeight - btn.offsetHeight;
+            posX += velX; posY += velY;
+            if (posX >= larguraTela || posX <= 0) velX *= -1;
+            if (posY >= alturaTela || posY <= 0) velY *= -1;
+            btn.style.left = posX + 'px';
+            btn.style.top = posY + 'px';
+            requestAnimationFrame(moverBotao);
+        }
+        moverBotao();
+
+        function vitoria() {
+            alert("Eu sabia! Mal posso esperar por esse dia. Te amo, Sarah! ❤️");
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
